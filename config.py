@@ -1,18 +1,18 @@
 import os
 
 DB_CONFIG = {
-    'dbname' : os.environ.get('DB_NAME'),
-    'user' : os.environ.get('DB_USER'),
-    'password' : os.environ.get('DB_PASSWORD'),
-    'host' : os.environ.get('DB_HOST'),
-    'port' : os.environ.get('DB_PORT')
+    'dbname' : os.environ.get('POSTGRES_DB'),
+    'user' : os.environ.get('POSTGRES_USER'),
+    'password' : os.environ.get('POSTGRES_PASSWORD'),
+    'host' : os.environ.get('POSTGRES_HOST'),
+    'port' : os.environ.get('POSTGRES_PORT')
 }
 
 if DB_CONFIG['dbname'] is None:
-    raise RuntimeError("Environment variable DB_NAME is missing")
+    raise RuntimeError("Environment variable POSTGRES_DB is missing")
 
 if DB_CONFIG['user'] is None:
-    raise RuntimeError("Environment variable DB_USER is missing")
+    raise RuntimeError("Environment variable POSTGRES_USER is missing")
 
 if DB_CONFIG['password'] is None:
-    raise RuntimeError("Environment variable DB_PASSWORD is missing")
+    raise RuntimeError("Environment variable POSTGRES_PASSWORD is missing")

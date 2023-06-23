@@ -1,0 +1,19 @@
+version: '3'
+services:
+  python-app:
+    build: .
+    image: danielanik/task-management-app:2
+    ports:
+      - '8081:5000'
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  db:
+    image: postgres
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+
