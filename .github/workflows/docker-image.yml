@@ -16,5 +16,5 @@ jobs:
       run: |
         docker build . --file Dockerfile --tag danielanik/task-management-app:$(date +%s)
         docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-        docker push my-image-name:$(date +%s)
+        docker push danielanik/task-management-app:$(date +%s)
 
