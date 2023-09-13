@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-management-app
+  namespace: devops
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tasks-app
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 300
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: tasks-app
+    spec:
+      containers:
+        - name: tasks-app
+          image: danielanik/task-management-app:4.0
+          ports:
+            - containerPort: 8081
+          envFrom:
+           - configMapRef:
+               name: db-config
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password

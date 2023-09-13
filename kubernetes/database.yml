@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config
+  namespace: devops
+data:
+  POSTGRES_DB: tasks
+  POSTGRES_USER: postgres
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+  namespace: devops
+type: Opaque
+data:
+  password: YWRtaW4=
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: db-pvc
+  namespace: devops
+  labels:
+    app: postgres
+spec:
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-postgres
+  namespace: devops
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+        namespace: devops
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          envFrom:
+            - configMapRef:
+                name: db-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
+          ports:
+            - containerPort: 5432
+              name: postgres-port
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+  namespace: devops
+spec:
+  clusterIP: None
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432

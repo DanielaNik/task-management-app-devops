@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  namespace: devops
+spec:
+  type: LoadBalancer
+  selector:
+    app: tasks-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081

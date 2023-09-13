@@ -2,7 +2,7 @@ version: '3'
 services:
   python-app:
     build: .
-    image: danielanik/task-management-app:2
+    image: danielanik/task-management-app:4
     ports:
       - '8081:5000'
     depends_on:
